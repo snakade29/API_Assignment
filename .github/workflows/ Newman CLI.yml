@@ -43,7 +43,7 @@ jobs:
     # Run the Postman Collection
     - name: Run Collection
       run: |
-        newman run "Assignment API Test.postman_collection.json"
+        newman run "Assignment API Test.postman_collection.json" -r htmlextra --reporter-htmlextra-export SampleArtifact/report.html
         
 
     # Publish the Report
