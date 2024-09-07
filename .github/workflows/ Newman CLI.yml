@@ -23,6 +23,11 @@ jobs:
     # Checkout your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v3
 
+       - name: Set Timezone
+      run: |
+        sudo timedatectl set-timezone "Asia/Kolkata"  # Set to Kolkata time zone
+        date  # Print the date to confirm the change
+
     # Create a directory to store artifacts like reports
     - name: Create dir
       run: |
