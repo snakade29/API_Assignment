@@ -1,0 +1,36 @@
+ name: Run Postman Collection
+
+# Define the event that triggers the workflow
+on:
+  push:
+    branches:
+      - main  # Run on every push to the main branch
+  pull_request:
+    branches:
+      - main  # Run on every PR to the main branch
+
+# Define the jobs
+jobs:
+  run-postman-collection:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Check out the repository code
+    - name: Check out code
+      uses: actions/checkout@v3
+
+    # Step 2: Set up Node.js environment
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'  # or any version supported by your project
+
+    # Step 3: Install Newman
+    - name: Install Newman
+      run: npm install -g newman
+
+    # Step 4: Run the Postman collection using Newman
+    - name: Run Postman Collection
+      run: newman run < Assignment API Test.postman_collection.json> -e   -r cli,html
+      env:
+        CI: true  # This is optional, used to indicate the script is running in CI mode
