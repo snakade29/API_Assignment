@@ -1,36 +1,54 @@
- name: Run Postman Collection
+ # This is a basic workflow to help you get started with Actions
 
-# Define the event that triggers the workflow
+name: Newman CLI
+
+# Controls when the workflow will run
 on:
+  # Triggers the workflow on push or pull request events but only for the "master" branch
   push:
-    branches:
-      - main  # Run on every push to the main branch
+    branches: [ "master" ]
   pull_request:
-    branches:
-      - main  # Run on every PR to the main branch
+    branches: [ "master" ]
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
 
-# Define the jobs
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  run-postman-collection:
+  build:
+    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
+    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Step 1: Check out the repository code
-    - name: Check out code
-      uses: actions/checkout@v3
+    # Checkout your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v3
 
-    # Step 2: Set up Node.js environment
-    - name: Set up Node.js
+    # Create a directory to store artifacts like reports
+    - name: Create dir
+      run: |
+        mkdir SampleArtifact
+
+    # Install Node.js
+    - name: Install Node
       uses: actions/setup-node@v3
       with:
-        node-version: '16'  # or any version supported by your project
+        node-version: '17.x'
 
-    # Step 3: Install Newman
-    - name: Install Newman
-      run: npm install -g newman
+    # Install Newman and Reporter
+    - name: Install newman
+      run: |
+        npm install -g newman
+        npm install -g newman-reporter-htmlextra
 
-    # Step 4: Run the Postman collection using Newman
-    - name: Run Postman Collection
-      run: newman run < Assignment API Test.postman_collection.json> -e   -r cli,html
-      env:
-        CI: true  # This is optional, used to indicate the script is running in CI mode
+    # Run the Postman Collection
+    - name: Run Collection
+      run: |
+        newman run "Assignment API Test.postman_collection.json"
+        -r htmlextra --reporter-htmlextra-export SampleArtifact/report.html
+
+    # Publish the Report
+    - name: Publish Report
+      uses: actions/upload-artifact@v3
+      with:
+        name: Reports
+        path: SampleArtifact
