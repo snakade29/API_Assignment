@@ -1,29 +1,22 @@
- # This is a basic workflow to help you get started with Actions
- # This is a basic workflow 
-name: Newman CLI
+ name: Newman CLI
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "master" branch
   push:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Checkout your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v3
 
-       - name: Set Timezone
+    # Set Timezone to Kolkata
+    - name: Set Timezone
       run: |
         sudo timedatectl set-timezone "Asia/Kolkata"  # Set to Kolkata time zone
         date  # Print the date to confirm the change
@@ -49,7 +42,6 @@ jobs:
     - name: Run Collection
       run: |
         newman run "Assignment API Test.postman_collection.json" -r htmlextra --reporter-htmlextra-export SampleArtifact/report.html
-        
 
     # Publish the Report
     - name: Publish Report
